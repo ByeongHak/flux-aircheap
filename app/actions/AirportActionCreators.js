@@ -7,25 +7,13 @@ import constants from '../constants';
 import AirCheapAPI from '../api/AirCheapAPI';
 
 let AirportActionCreators = {
-  fetchAirports() {
-    AirCheapAPI.fetchAirports(); // 1) 초기 JSON 데이터를 읽어 온 후,
-    AppDispatcher.dispatch({ // 2) 액션 발생
-      type: constants.FETCH_AIRPORTS,
-    })
-  },
 
-  fetchAirportsSuccess(response) {
-    AppDispatcher.dispatch({
-      type: constants.FETCH_AIRPORTS_SUCCESS, // 3) JSON FETCH 성공일 경우
-      payload: {response} //4)  JSON 값을 스토어에 전달
+  fetchAirports(origin, destination) {
+    AppDispatcher.dispatchAsync(AirCheapAPI.fetchAirports(), {
+      request: constants.FETCH_AIRPORTS,
+      success: constants.FETCH_AIRPORTS_SUCCESS,
+      failure: constants.FETCH_AIRPORTS_ERROR
     });
-  },
-
-  fetchAirportsError(error){
-    AppDispatcher.dispatch({
-      type: constants.FETCH_AIRPORTS_ERROR,
-      payload: {error}
-    })
   },
 
   chooseAirport(target, code){
@@ -36,26 +24,14 @@ let AirportActionCreators = {
     });
   },
 
-  fetchTickets(){
-    AirCheapAPI.fetchTickets();
-    AppDispatcher.dispatch({
-      type: constants.FETCH_TICKETS,
-    });
-  },
-
-  fetchTicketsSuccess(response){
-    AppDispatcher.dispatch({
-      type: constants.FETCH_TICKETS_SUCCESS,
-      payload: {response}
-    });
-  },
-
-  fetchTicketsError(error){
-    AppDispatcher.dispatch({
-      type: constants.FETCH_TICKETS_ERROR,
-      payload: {error}
-    });
+  fetchTickets(origin, destination){
+    AppDispatcher.dispatchAsync(AirCheapAPI.fetchTickets(origin, destination), {
+      request: constants.FETCH_TICKETS,
+      success: constants.FETCH_TICKETS_SUCCESS,
+      failure: constants.FETCH_TICKETS_SUCCESSETS,
+    }) 
   }
+
 };
 
 export default AirportActionCreators;
